@@ -20,7 +20,12 @@ object PNMutualExclusion:
     MSet(C) ~~> MSet()
   ).toSystem
 
+  given initialMarking: MSet[Place] = MSet(N,N)
+  given depth: Int = 7
+
 @main def mainPNMutualExclusion =
   import PNMutualExclusion.*
+  import PNMutualExclusion.given
   // example usage
   println(pnME.paths(MSet(N,N),7).toList.mkString("\n"))
+  println(pnME.neverHappen(MSet(C,C)))
