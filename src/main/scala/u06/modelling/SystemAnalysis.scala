@@ -24,3 +24,9 @@ object SystemAnalysis:
     // complete paths with length '<= depth' (could be optimised)
     def completePathsUpToDepth(s: S, depth:Int): Seq[Path[S]] =
       (1 to depth).to(LazyList) flatMap (paths(s, _)) filter (complete(_))
+
+    def neverHappen(prop: S)(using s: S, depth: Int): Boolean =
+      val runs = for
+        path <- system.completePathsUpToDepth(s, depth)
+      yield path.contains(prop)
+      runs.forall(b => !b)
