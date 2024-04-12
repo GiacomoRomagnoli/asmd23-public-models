@@ -11,14 +11,15 @@ object SystemAnalysis:
 
     def complete(p: Path[S]): Boolean = normalForm(p.last)
 
-    // paths of exactly length `depth`
     def paths(s: S, depth: Int): Seq[Path[S]] = depth match
       case 0 => LazyList()
       case 1 => LazyList(List(s))
       case _ =>
         for
           path <- paths(s, depth - 1)
-          next <- system.next(path.last)
+          next <- system.next(path.last) match
+            case s if s.isEmpty => Set(path.last)
+            case s => s
         yield path :+ next
 
     // complete paths with length '<= depth' (could be optimised)

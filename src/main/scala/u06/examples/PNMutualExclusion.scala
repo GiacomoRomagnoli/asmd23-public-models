@@ -21,7 +21,7 @@ object PNMutualExclusion:
   ).toSystem
 
   given initialMarking: MSet[Place] = MSet(N,N)
-  given depth: Int = 7
+  given depth: Int = 100
 
 @main def mainPNMutualExclusion =
   import PNMutualExclusion.*
