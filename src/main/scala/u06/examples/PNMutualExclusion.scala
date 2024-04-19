@@ -28,4 +28,4 @@ object PNMutualExclusion:
   import PNMutualExclusion.given
   // example usage
   println(pnME.paths(MSet(N,N),7).toList.mkString("\n"))
-  println(pnME.neverHappen(MSet(C,C)))
+  println(pnME.always(!_.matches(MSet(C,C))))
