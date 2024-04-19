@@ -26,8 +26,7 @@ object SystemAnalysis:
     def completePathsUpToDepth(s: S, depth:Int): Seq[Path[S]] =
       (1 to depth).to(LazyList) flatMap (paths(s, _)) filter (complete(_))
 
-    def neverHappen(prop: S)(using s: S, depth: Int): Boolean =
-      val runs = for
-        path <- system.completePathsUpToDepth(s, depth)
-      yield path.contains(prop)
-      runs.forall(b => !b)
+    def always(prop: S => Boolean)(using s: S, depth: Int): Boolean =
+      (for
+        path <- system.paths(s, depth)
+      yield path.forall(prop)).forall(b => b)
