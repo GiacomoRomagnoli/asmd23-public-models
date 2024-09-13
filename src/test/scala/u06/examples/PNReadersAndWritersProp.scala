@@ -12,3 +12,6 @@ class PNReadersAndWritersProp extends AnyFunSuite:
     pnRW.always(!_.matches(MSet(p7, p7))) shouldBe true
     pnRW.always(!_.matches(MSet(p6, p7))) shouldBe true
 
+  test("In pnERW a reader should eventually read"):
+    ???
+
