@@ -27,6 +27,4 @@ object SystemAnalysis:
       (1 to depth).to(LazyList) flatMap (paths(s, _)) filter (complete(_))
 
     def always(prop: S => Boolean)(using s: S, depth: Int): Boolean =
-      (for
-        path <- system.paths(s, depth)
-      yield path.forall(prop)).forall(b => b)
+      system.paths(s, depth).forall(p => p.forall(prop))
