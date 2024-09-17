@@ -42,7 +42,6 @@ object SystemAnalysis:
       @tailrec
       def loop(states: Path[S], depth: Int, acc: Map[S, Set[S]]): Map[S, Set[S]] = depth match
         case 0 => acc
-        case 1 => acc
         case _ =>
           val kv = for 
             s <- states
