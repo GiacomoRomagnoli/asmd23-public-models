@@ -1,5 +1,10 @@
 package u06.modelling
 
+import u06.modelling.SystemAnalysis.paths
+import u07.utils.MSet
+
+import scala.annotation.tailrec
+
 // Basical analysis helpers
 object SystemAnalysis:
 
@@ -25,6 +30,28 @@ object SystemAnalysis:
     // complete paths with length '<= depth' (could be optimised)
     def completePathsUpToDepth(s: S, depth:Int): Seq[Path[S]] =
       (1 to depth).to(LazyList) flatMap (paths(s, _)) filter (complete(_))
+      
+    // paths pruned
+    def syntheticPaths(s: S, depth: Int): Map[S, Set[S]] = 
+
+      @tailrec
+      def loop(states: Path[S], depth: Int, acc: Map[S, Set[S]]): Map[S, Set[S]] = depth match
+        case 0 => acc
+        case 1 => acc
+        case _ =>
+          val kv = for 
+            s <- states
+            entry <- system.next(s) match
+              case _ if acc.contains(s) => List() 
+              case n => List((s, n))
+          yield entry
+          val ns = for 
+            entry <- kv
+            s <- entry._2
+          yield s
+          loop(ns, depth - 1, acc ++ kv)
+      
+      loop(List(s), depth, Map.empty)
 
     def always(prop: S => Boolean)(using s: S, depth: Int): Boolean =
-      system.paths(s, depth).forall(p => p.forall(prop))
+      system.syntheticPaths(s, depth).keys.forall(prop)

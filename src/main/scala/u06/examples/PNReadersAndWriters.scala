@@ -36,9 +36,9 @@ object PNReadersAndWriters:
     MSet(p7) ~~> MSet(p5, p1),
   ).toSystem
 
-  given initialMark: MSet[Place] = MSet(p1, p1, p1, p1)
-  given depth: Int = 100
+  given initialMark: MSet[Place] = MSet(p1, p1, p5)
+  given depth: Int = 15
 
 @main def mainPNReadersAndWriters =
   import PNReadersAndWriters.*
-  println(pnERW.paths(initialMark, 10).toList.mkString("\n"))
+  println(pnRW.syntheticPaths(initialMark, 100).toList.mkString("\n"))
