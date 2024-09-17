@@ -30,8 +30,13 @@ object SystemAnalysis:
     // complete paths with length '<= depth' (could be optimised)
     def completePathsUpToDepth(s: S, depth:Int): Seq[Path[S]] =
       (1 to depth).to(LazyList) flatMap (paths(s, _)) filter (complete(_))
-      
-    // paths pruned
+
+    /**
+     * Used to make analysis of a system without generating all possible paths
+     * @param s start state
+     * @param depth max length for paths 
+     * @return a map representing every possible transition available in paths with max length depth
+     */
     def syntheticPaths(s: S, depth: Int): Map[S, Set[S]] = 
 
       @tailrec
