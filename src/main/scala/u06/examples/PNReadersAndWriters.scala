@@ -41,5 +41,6 @@ object PNReadersAndWriters:
 
 @main def mainPNReadersAndWriters =
   import PNReadersAndWriters.*
-  println(pnRW.syntheticPaths(initialMark, 3).toList.mkString("\n"))
-  println(pnRW.always(!_.matches(MSet(p1, p1))))
+  println(pnRW.syntheticPaths(initialMark, 3).toList.mkString("\n")) 
+  println(pnRW.always(!_.matches(MSet(p1, p1)))) // false
+  println(pnERW.eventually(_.matches(MSet(p6)))(using MSet(p4, p4, p4, p4, p3, p5))) // true

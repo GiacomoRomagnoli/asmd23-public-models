@@ -34,28 +34,40 @@ object SystemAnalysis:
     /**
      * Used to make analysis of a system without generating all possible paths
      * @param s start state
-     * @param depth max length for paths 
+     * @param depth max length for paths
      * @return a map representing every possible transition available in paths with max length depth
      */
-    def syntheticPaths(s: S, depth: Int): Map[S, Set[S]] = 
+    def syntheticPaths(s: S, depth: Int): Map[S, Set[S]] =
 
       @tailrec
       def loop(states: Path[S], depth: Int, acc: Map[S, Set[S]]): Map[S, Set[S]] = depth match
         case 0 => acc
         case _ =>
-          val kv = for 
+          val kv = for
             s <- states
             entry <- system.next(s) match
-              case _ if acc.contains(s) => List() 
+              case _ if acc.contains(s) => List()
               case n => List((s, n))
           yield entry
-          val ns = for 
+          val ns = for
             entry <- kv
             s <- entry._2
           yield s
           loop(ns, depth - 1, acc ++ kv)
-      
+
       loop(List(s), depth, Map.empty)
 
     def always(prop: S => Boolean)(using s: S, depth: Int): Boolean =
       system.syntheticPaths(s, depth).keys.forall(prop)
+    
+    // exponential algorithm
+    def eventually(prop: S => Boolean)(using s: S, depth: Int): Boolean =
+      def loop(prop: S => Boolean, s: S, transitions: Map[S, Set[S]], maxIteration: Int): Boolean =
+        maxIteration match
+          case 0 => false
+          case _ => transitions.get(s) match
+              case None => false
+              case Some(set) if set.forall(prop) => true
+              case Some(set) => set.filter(!prop(_)).forall(state => loop(prop, state, transitions, maxIteration - 1))
+      loop(prop, s, system.syntheticPaths(s, depth), depth)
+
