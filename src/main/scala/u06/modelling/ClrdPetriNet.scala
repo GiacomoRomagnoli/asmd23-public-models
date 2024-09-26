@@ -1,5 +1,4 @@
 package scala.u06.modelling
-import u06.modelling.PetriNet
 import u06.modelling.System
 import u06.utils.MSet
 
@@ -35,7 +34,7 @@ object ClrdPetriNet:
     else
       Trn(
         cond,
-        condition => MSet.ofList((for i <- 0 to condition.size yield (eff.asList(i), condition.asList(i)._2)).toList),
+        condition => MSet.ofList((for i <- 0 until condition.size yield (eff.asList(i), condition.asList(i)._2)).toList),
         MSet()
       )
 
