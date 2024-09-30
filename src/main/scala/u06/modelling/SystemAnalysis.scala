@@ -9,6 +9,7 @@ import scala.annotation.tailrec
 object SystemAnalysis:
 
   type Path[S] = List[S]
+  type LazyPath[S] = LazyList[S]
 
   extension [S](system: System[S])
 
@@ -26,6 +27,20 @@ object SystemAnalysis:
             case s if s.isEmpty => Set(path.last)
             case s => s
         yield path :+ next
+
+    def lazyPaths(s: S): Iterator[LazyList[LazyPath[S]]] =
+      def loop(cache: LazyList[LazyPath[S]]): LazyList[LazyPath[S]] = for
+        path <- cache
+        next <- system.next(path.last)
+      yield path :+ next
+      new Iterator[LazyList[LazyPath[S]]]:
+        var cache = LazyList(LazyList(s))
+        def hasNext = true
+        def next: LazyList[LazyPath[S]] =
+          cache = loop(cache)
+          cache
+
+
 
     // complete paths with length '<= depth' (could be optimised)
     def completePathsUpToDepth(s: S, depth:Int): Seq[Path[S]] =
