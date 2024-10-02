@@ -1,5 +1,7 @@
 package u07.utils
 
+import u07.modelling.CTMC
+import u07.modelling.CTMCSimulation.newSimulationTrace
 import scala.util.Random
 
 object Stochastics:
@@ -22,3 +24,23 @@ object Stochastics:
     (1 to size).map(i => draw(cumulative(choices.toList)))
                 .groupBy(identity).view.mapValues(_.size).toMap
 
+  def meanTime[A](from: A, until: A, in: CTMC[A], runs: Int)(using rnd: Random): Double =
+    val times = for
+      _ <- 1 to runs
+    yield in.newSimulationTrace(from, rnd).dropWhile(_.state != until).head.time
+    times.sum / times.size
+
+  def amountOfTime[A](of: A, from: A, until: A, in: CTMC[A], runs: Int)(using rnd: Random): Double =
+    val simulations = for
+      span <- for
+        _ <- 1 to runs
+      yield in.newSimulationTrace(from, rnd).span(_.state != until)
+    yield span._1 :+ span._2.head
+    val times = for
+      simulation <- simulations
+    yield simulation.foldLeft((0.0, simulation.head))(
+      (acc, e) => acc match
+        case (amount, last) if last.state == of => (amount + e.time - last.time, e)
+        case (amount, _) => (amount, e)
+    )._1
+    (times.sum / simulations.map(_.last.time).sum) * 100

@@ -1,6 +1,6 @@
 package u07.modelling
 
-import java.util.Random
+import scala.util.Random
 import u07.utils.Stochastics
 
 object CTMCSimulation:
