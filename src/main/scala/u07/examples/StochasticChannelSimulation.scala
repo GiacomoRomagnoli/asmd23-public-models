@@ -16,5 +16,5 @@ import u07.utils.Stochastics.{amountOfTime, meanTime, given}
 
 @main def mainStochasticChannelStatistics(): Unit =
   println:
-    "mean time until DONE = " + meanTime(IDLE, DONE, stocChannel, 10000) + "\n" +
-    "FAIL time until DONE = " + amountOfTime(FAIL, IDLE, DONE, stocChannel, 10000) + " %"
+    "mean time until DONE = " + meanTime(IDLE, _ == DONE, stocChannel, 10000) + "\n" +
+    "FAIL time until DONE = " + amountOfTime(IDLE, _ == FAIL, _ == DONE, stocChannel, 10000) + " %"
